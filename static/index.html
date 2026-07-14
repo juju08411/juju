@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文章朗讀</title>
+  <meta name="theme-color" content="#1f6f5c" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <h1>文章朗讀</h1>
+    <p class="hint">貼上中英文文章，點「朗讀」開始聆聽</p>
+
+    <textarea id="article-input" placeholder="在這裡貼上文章..." rows="8"></textarea>
+
+    <div class="controls">
+      <button id="read-btn">朗讀</button>
+      <button id="play-pause-btn" disabled>暫停</button>
+      <label class="speed-label">
+        語速
+        <select id="speed-select">
+          <option value="0.75">0.75x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.25">1.25x</option>
+          <option value="1.5">1.5x</option>
+        </select>
+      </label>
+    </div>
+
+    <p id="status" class="status" aria-live="polite"></p>
+
+    <div id="article-view" class="article-view"></div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
