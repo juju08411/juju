@@ -60,6 +60,29 @@ textarea {
   resize: vertical;
 }
 
+.url-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.url-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 0.9rem;
+}
+
+.url-row button {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
 .controls {
   display: flex;
   align-items: center;

@@ -1,4 +1,6 @@
 const articleInput = document.getElementById("article-input");
+const urlInput = document.getElementById("url-input");
+const extractBtn = document.getElementById("extract-btn");
 const readBtn = document.getElementById("read-btn");
 const playPauseBtn = document.getElementById("play-pause-btn");
 const speedSelect = document.getElementById("speed-select");
@@ -195,6 +197,40 @@ audioEl.addEventListener("error", () => {
   // A mid-playback decode/network error never fires "ended", so without
   // this the session would silently hang on the current chunk forever.
   if (isPlaying && currentChunkIndex >= 0) playChunk(currentChunkIndex + 1);
+});
+
+async function extractFromUrl() {
+  const url = urlInput.value.trim();
+  if (!url) {
+    setStatus("請先貼上網址");
+    return;
+  }
+
+  extractBtn.disabled = true;
+  setStatus("擷取文章中...");
+
+  try {
+    const res = await fetch("/api/extract", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "擷取失敗");
+
+    articleInput.value = data.text;
+    const truncatedNote = data.truncated ? "（文章過長，僅擷取前 8000 字）" : "";
+    setStatus(data.title ? `已擷取：「${data.title}」${truncatedNote}` : `已擷取文章${truncatedNote}`);
+  } catch (err) {
+    setStatus(err.message || "擷取文章時發生錯誤，請稍後再試");
+  } finally {
+    extractBtn.disabled = false;
+  }
+}
+
+extractBtn.addEventListener("click", extractFromUrl);
+urlInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") extractFromUrl();
 });
 
 readBtn.addEventListener("click", async () => {

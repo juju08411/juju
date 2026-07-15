@@ -5,6 +5,7 @@ from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from .extractor import ExtractError, extract_article
 from .segmenter import segment_text
 from .tts import synthesize
 
@@ -24,6 +25,26 @@ class ArticleRequest(BaseModel):
 class SegmentRequest(BaseModel):
     text: str
     lang: str
+
+
+class ExtractRequest(BaseModel):
+    url: str
+
+
+@app.post("/api/extract")
+def api_extract(req: ExtractRequest):
+    try:
+        result = extract_article(req.url)
+    except ExtractError as e:
+        raise HTTPException(400, str(e))
+    except Exception:
+        raise HTTPException(400, "擷取文章時發生錯誤，請稍後再試")
+
+    text = result["text"]
+    truncated = len(text) > MAX_ARTICLE_CHARS
+    if truncated:
+        text = text[:MAX_ARTICLE_CHARS]
+    return {"title": result["title"], "text": text, "truncated": truncated}
 
 
 @app.post("/api/segments")

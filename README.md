@@ -39,6 +39,7 @@ uvicorn backend.main:app --reload --port 8000
 - Render 免費方案閒置約 15 分鐘會休眠，之後第一次開啟網址會有約 30–50 秒的喚醒延遲。
 - 沒有帳號與資料保存機制，每次重新貼文章即可，關閉分頁後不會留下紀錄。
 - 中英文語言偵測與斷句是規則式判斷，遇到罕見的縮寫、符號可能偶爾切換不自然。
+- 貼網址擷取文章功能已針對常見的內網位址做防護（SSRF），但沒有流量限制，理論上仍可能被拿來重複呼叫任意公開網址，屬於跟現有 App 一致的風險接受程度。
 
 ## 專案結構
 
@@ -48,6 +49,7 @@ article-reader/
     main.py        # FastAPI 路由、掛載前端靜態檔案
     tts.py          # edge-tts 包裝：(text, lang) -> 語音 bytes
     segmenter.py     # 中英文語言／斷句邏輯
+    extractor.py      # 網址擷取文章內容（含 SSRF 防護）
   static/
     index.html
     style.css
